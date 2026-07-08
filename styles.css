@@ -52,3 +52,27 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.school-schedule-details {
+  margin-top: 14px;
+  background: #fff;
+  border: 1px solid rgba(155, 92, 59, 0.16);
+  border-radius: 16px;
+  padding: 12px;
+}
+.school-schedule-details summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--accent);
+}
+.school-mini-table {
+  margin-top: 10px;
+}
+.school-mini-table table {
+  min-width: 520px;
+}
+.school-mini-table th,
+.school-mini-table td {
+  padding: 9px;
+  font-size: 13px;
+}

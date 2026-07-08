@@ -129,6 +129,8 @@ function populateCategoryAndSource(selectedCategory, selectedSource) {
 
 
 const schoolPayrollSchedule = [
+  { start: '2026-06-01', end: '2026-06-15', due: '2026-06-15', pay: '2026-06-25', note: 'June 1–15 paycheck from your paystub example.' },
+  { start: '2026-06-16', end: '2026-06-30', due: '2026-06-30', pay: '2026-07-09', note: 'Second June payroll, paid in July.' },
   { start: '2026-07-01', end: '2026-07-15', due: '2026-07-15', pay: '2026-07-24' },
   { start: '2026-07-16', end: '2026-07-31', due: '2026-07-31', pay: '2026-08-07' },
   { start: '2026-08-01', end: '2026-08-15', due: '2026-08-14', pay: '2026-08-25' },
@@ -170,13 +172,36 @@ function schoolEstimate() {
   return { date, hours, rate, netPercent, gross, net, period };
 }
 
+function renderSchoolSchedulePreview() {
+  if (!$('schoolSchedulePreview')) return;
+  const rows = schoolPayrollSchedule
+    .filter(p => p.start >= '2026-06-01' && p.start <= '2026-08-31')
+    .map(p => `
+      <tr>
+        <td>${p.start} – ${p.end}</td>
+        <td>${p.due}</td>
+        <td><strong>${p.pay}</strong></td>
+      </tr>
+    `).join('');
+  $('schoolSchedulePreview').innerHTML = `
+    <div class="table-wrap school-mini-table">
+      <table>
+        <thead><tr><th>Payroll period</th><th>Due date</th><th>Payday</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
 function renderSchoolEstimate() {
   if (!$('schoolEstimate')) return;
   const estimate = schoolEstimate();
   const periodText = estimate.period ? `${estimate.period.start} – ${estimate.period.end}` : 'Not in schedule';
+  const dueText = estimate.period ? estimate.period.due : 'Check schedule';
   const payText = estimate.period ? estimate.period.pay : 'Check schedule';
   $('schoolEstimate').innerHTML = `
     <div><span>Pay period</span><strong>${periodText}</strong></div>
+    <div><span>Timecard due</span><strong>${dueText}</strong></div>
     <div><span>Expected payday</span><strong>${payText}</strong></div>
     <div><span>Gross estimate</span><strong>${money(estimate.gross)}</strong></div>
     <div><span>Net estimate</span><strong>${money(estimate.net)}</strong></div>
@@ -667,6 +692,7 @@ if ($('addSchoolPay')) $('addSchoolPay').onclick = async () => {
   $('schoolHours').value = '';
   await saveCloud();
   renderSchoolEstimate();
+  renderSchoolSchedulePreview();
   render();
   alert(`Added ${estimate.hours} school hours to the ${estimate.period.pay} paycheck estimate.`);
 };

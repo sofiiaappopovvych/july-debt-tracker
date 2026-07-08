@@ -316,3 +316,17 @@ The Add screen includes a School Paycheck Calculator. Enter the work date and ho
 - save the estimated income on the expected payday.
 
 Default values are based on the sample paystub: $20.81/hour and about 83.05% net pay ($570.32 net from $686.73 gross). This is only an estimate; actual taxes/deductions can change by paycheck.
+
+
+## School payroll dates added
+
+The School Paycheck Calculator includes these periods from the user's payroll screenshots:
+
+| Payroll period | Due date | Pay date |
+|---|---:|---:|
+| June 1–15, 2026 | June 15, 2026 | June 25, 2026 |
+| June 16–30, 2026 | June 30, 2026 | July 9, 2026 |
+| August 1–15, 2026 | August 14, 2026 | August 25, 2026 |
+| August 16–31, 2026 | August 31, 2026 | September 9, 2026 |
+
+The default net estimate is based on the paystub ratio: $570.32 net from $686.73 gross, or about 83.05% net.

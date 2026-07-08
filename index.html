@@ -149,7 +149,7 @@
       <div class="section-head">
         <div>
           <h2>School Paycheck Calculator</h2>
-          <p>Enter only the hours you worked today, for example 5.5. The app estimates deductions, finds the correct payday, and adds the estimated net amount to that paycheck date.</p>
+          <p>Enter only the hours you worked today, for example 5.5. The app estimates deductions, finds the correct payday, and adds the estimated net amount to that paycheck date. June and August payroll periods are included.</p>
         </div>
       </div>
       <div class="grid form-grid school-form">
@@ -174,6 +174,10 @@
       </div>
       <button id="addSchoolPay" class="primary full">Add hours to payday income</button>
       <p class="backup-note">Default net % is based on your example paystub: $570.32 net from $686.73 gross. You can change it anytime.</p>
+      <details class="school-schedule-details" open>
+        <summary>June–August school payroll dates</summary>
+        <div id="schoolSchedulePreview"></div>
+      </details>
     </section>
 
     <section class="summary-card app-screen" data-screen="dashboard">
