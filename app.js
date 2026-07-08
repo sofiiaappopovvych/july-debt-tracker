@@ -626,22 +626,49 @@ if ($('schoolWorkDate')) $('schoolWorkDate').value ||= todayISO();
 });
 if ($('addSchoolPay')) $('addSchoolPay').onclick = async () => {
   const estimate = schoolEstimate();
-  if (!estimate.hours) return alert('Enter school hours worked.');
+  if (!estimate.hours) return alert('Enter school hours worked, for example 5.5.');
   if (!estimate.period) return alert('This date is outside the saved 2026–2027 payroll schedule.');
-  state.transactions.push({
-    id: crypto.randomUUID(),
-    createdAt: new Date().toISOString(),
-    date: estimate.period.pay,
-    type: 'income',
-    group: 'Earned Income',
-    category: 'School',
-    source: 'School',
-    amount: Number(estimate.net.toFixed(2)),
-    note: `School estimate: ${estimate.hours} hrs on ${estimate.date}; gross ${money(estimate.gross)}; net ${estimate.netPercent}%; pay period ${estimate.period.start}–${estimate.period.end}; timecard due ${estimate.period.due}`
-  });
+
+  const periodKey = `${estimate.period.start}_${estimate.period.end}`;
+  const existing = state.transactions.find(t =>
+    t.type === 'income' &&
+    t.source === 'School' &&
+    t.date === estimate.period.pay &&
+    (t.kind === 'schoolPaycheckEstimate' || t.schoolPeriodKey === periodKey)
+  );
+
+  if (existing) {
+    const oldHours = Number(existing.schoolHours || 0);
+    const oldGross = Number(existing.schoolGross || 0);
+    const oldNet = Number(existing.amount || 0);
+    existing.schoolHours = Number((oldHours + estimate.hours).toFixed(2));
+    existing.schoolGross = Number((oldGross + estimate.gross).toFixed(2));
+    existing.amount = Number((oldNet + estimate.net).toFixed(2));
+    existing.updatedAt = new Date().toISOString();
+    existing.note = `School paycheck estimate: ${existing.schoolHours} total hrs; gross ${money(existing.schoolGross)}; estimated net ${money(existing.amount)}; pay period ${estimate.period.start}–${estimate.period.end}; payday ${estimate.period.pay}. Last added: ${estimate.hours} hrs on ${estimate.date}.`;
+  } else {
+    state.transactions.push({
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+      date: estimate.period.pay,
+      type: 'income',
+      group: 'Earned Income',
+      category: 'School',
+      source: 'School',
+      amount: Number(estimate.net.toFixed(2)),
+      kind: 'schoolPaycheckEstimate',
+      schoolPeriodKey: periodKey,
+      schoolHours: Number(estimate.hours.toFixed(2)),
+      schoolGross: Number(estimate.gross.toFixed(2)),
+      note: `School paycheck estimate: ${estimate.hours} hrs; gross ${money(estimate.gross)}; estimated net ${money(estimate.net)}; pay period ${estimate.period.start}–${estimate.period.end}; payday ${estimate.period.pay}. Added from work date ${estimate.date}.`
+    });
+  }
+
   $('schoolHours').value = '';
   await saveCloud();
+  renderSchoolEstimate();
   render();
+  alert(`Added ${estimate.hours} school hours to the ${estimate.period.pay} paycheck estimate.`);
 };
 
 $('txType').onchange = () => populateCategoryAndSource();
@@ -658,6 +685,13 @@ document.querySelectorAll('.quick-btn').forEach(btn => {
     $('txType').value = btn.dataset.type;
     populateCategoryAndSource(btn.dataset.category, btn.dataset.source);
     $('txDate').value ||= todayISO();
+    if (btn.dataset.source === 'School') {
+      if ($('schoolWorkDate')) $('schoolWorkDate').value = $('txDate').value || todayISO();
+      renderSchoolEstimate();
+      $('schoolHours')?.focus();
+      $('schoolHours')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
     $('txAmount').focus();
   };
 });
