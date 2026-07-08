@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#9b5c3b" />
+  <title>July Debt Payoff Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">July Payoff Plan</p>
+        <h1>Debt Tracker</h1>
+        <p class="subtitle">Track income, expenses, daily progress, and days left until payment day.</p>
+      </div>
+      <button id="syncStatus" class="pill offline">Local Mode</button>
+    </header>
+
+    <section class="auth-card app-screen" data-screen="dashboard" id="authCard">
+      <div>
+        <h2>Sync across phone + computer</h2>
+        <p>Sign in with Google after adding Firebase config. Until then, the app saves on this device.</p>
+      </div>
+      <div class="auth-actions">
+        <button id="signInBtn" class="primary">Sign in with Google</button>
+        <button id="signOutBtn" class="secondary hidden">Sign out</button>
+      </div>
+    </section>
+
+    <section class="settings-card app-screen" data-screen="settings">
+      <h2>Goal Settings</h2>
+      <div class="grid form-grid">
+        <label>Starting credit card debt
+          <input id="startingDebt" type="number" step="0.01" />
+        </label>
+        <label>Payment due date
+          <input id="dueDate" type="date" />
+        </label>
+        <label>Starting cash / available funds
+          <input id="startingCash" type="number" step="0.01" />
+        </label>
+        <label>Target extra cushion
+          <input id="cushion" type="number" step="0.01" />
+        </label>
+      </div>
+      <button id="saveSettings" class="primary full">Save settings</button>
+    </section>
+
+    <section class="dashboard app-screen" data-screen="dashboard">
+      <div class="stat big">
+        <span>Remaining debt</span>
+        <strong id="remainingDebt">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Earned Income</span>
+        <strong id="earnedIncome">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Refunds</span>
+        <strong id="refundsIncome">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Sold Items</span>
+        <strong id="soldItemsIncome">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Gifts</span>
+        <strong id="giftsIncome">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Total Cash In</span>
+        <strong id="totalIncome">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Total expenses</span>
+        <strong id="totalExpenses">$0</strong>
+      </div>
+      <div class="stat surplus-card" id="surplusCard">
+        <span>Surplus</span>
+        <strong id="surplusAmount">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Days Until Payment</span>
+        <strong id="daysLeft">0</strong>
+      </div>
+      <div class="stat">
+        <span>Needed Per Day</span>
+        <strong id="neededPerDay">$0</strong>
+      </div>
+      <div class="stat">
+        <span>Progress</span>
+        <strong id="progressPercent">0%</strong>
+      </div>
+      <div class="stat goal-status-card">
+        <span>Goal Status</span>
+        <strong id="goalStatus">Set up goal</strong>
+      </div>
+    </section>
+
+    <section class="progress-card app-screen" data-screen="dashboard">
+      <div class="progress-bar"><div id="progressFill"></div></div>
+      <p id="progressNote"></p>
+    </section>
+
+    <section class="entry-card app-screen" data-screen="add">
+      <div class="section-head">
+        <h2>Quick Add</h2>
+        <p>Add income or expenses. The dashboard recalculates instantly.</p>
+      </div>
+      <div class="quick-buttons" aria-label="Quick transaction presets">
+        <button class="quick-btn income" data-type="income" data-category="Earned Income" data-source="DoorDash">+DoorDash</button>
+        <button class="quick-btn income" data-type="income" data-category="Earned Income" data-source="School">+School</button>
+        <button class="quick-btn income" data-type="income" data-category="Earned Income" data-source="Sales Commission">+Sales</button>
+        <button class="quick-btn income" data-type="income" data-category="Sold Items" data-source="Vinted">+Vinted</button>
+        <button class="quick-btn income" data-type="income" data-category="Refunds" data-source="Amazon">+Refund</button>
+        <button class="quick-btn income" data-type="income" data-category="Gifts" data-source="Birthday">+Gift</button>
+        <button class="quick-btn expense" data-type="expense" data-category="Expenses" data-source="Other">-Expense</button>
+      </div>
+      <div class="grid form-grid quick-form">
+        <label>Date
+          <input id="txDate" type="date" />
+        </label>
+        <label>Type
+          <select id="txType">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </label>
+        <label>Category
+          <select id="txCategory"></select>
+        </label>
+        <label>Source
+          <select id="txSource"></select>
+        </label>
+        <label>Amount
+          <input id="txAmount" type="number" step="0.01" placeholder="0.00" />
+        </label>
+      </div>
+      <label>Note
+        <input id="txNote" type="text" placeholder="optional" />
+      </label>
+      <button id="addTx" class="primary full">Add transaction</button>
+    </section>
+
+    <section class="summary-card app-screen" data-screen="dashboard">
+      <h2>Total Cash In by source</h2>
+      <div id="sourceSummary" class="source-list"></div>
+    </section>
+
+    <section class="summary-card app-screen" data-screen="dashboard">
+      <h2>Expenses by Category</h2>
+      <div id="expenseSummary" class="source-list"></div>
+    </section>
+
+
+    <section class="calendar-card app-screen" data-screen="calendar">
+      <div class="section-head">
+        <h2>July Calendar View</h2>
+        <p>Each day shows income, expenses, net, and remaining debt after that day.</p>
+      </div>
+      <div class="grid form-grid calendar-filters">
+        <label>Income source filter
+          <select id="calendarIncomeFilter"></select>
+        </label>
+        <label>Expense category filter
+          <select id="calendarExpenseFilter"></select>
+        </label>
+      </div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </section>
+
+    <section class="table-card app-screen" data-screen="calendar">
+      <h2>Daily Log</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Income</th><th>Expenses</th><th>Net</th></tr></thead>
+          <tbody id="dailyLog"></tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <section class="backup-card app-screen" data-screen="settings">
+      <div class="section-head">
+        <div>
+          <h2>Backup / Export</h2>
+          <p>Download a backup, restore from JSON, or export transactions for Excel/Google Sheets.</p>
+        </div>
+      </div>
+      <div class="backup-actions">
+        <button id="exportJson" class="secondary">Export JSON Backup</button>
+        <button id="exportCsv" class="secondary">Export CSV for Excel</button>
+        <label class="import-label">Import JSON Backup
+          <input id="importJson" type="file" accept="application/json,.json" />
+        </label>
+      </div>
+      <p class="backup-note">JSON restores settings and transactions. CSV exports transactions only.</p>
+    </section>
+
+    <section class="table-card app-screen" data-screen="history">
+      <div class="table-head">
+        <div>
+          <h2>Transaction History</h2>
+          <p class="table-subtitle">Sorted newest first. Search by note, source, or category.</p>
+        </div>
+        <button id="clearAll" class="danger">Clear all</button>
+      </div>
+      <label class="history-search-label">Search transactions
+        <input id="historySearch" type="search" placeholder="Search note, source, category..." />
+      </label>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Group</th><th>Category</th><th>Source</th><th>Amount</th><th>Note</th><th></th></tr></thead>
+          <tbody id="txTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-btn active" data-nav="dashboard"><span>🏠</span><b>Dashboard</b></button>
+      <button class="nav-btn" data-nav="add"><span>＋</span><b>Add</b></button>
+      <button class="nav-btn" data-nav="calendar"><span>📅</span><b>Calendar</b></button>
+      <button class="nav-btn" data-nav="history"><span>🧾</span><b>History</b></button>
+      <button class="nav-btn" data-nav="settings"><span>⚙️</span><b>Settings</b></button>
+    </nav>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
