@@ -144,9 +144,73 @@
       <button id="addTx" class="primary full">Add transaction</button>
     </section>
 
+
+    <section class="school-card app-screen" data-screen="add">
+      <div class="section-head">
+        <div>
+          <h2>School Paycheck Calculator</h2>
+          <p>Enter hours worked. The app estimates gross pay, net pay after deductions, and the payday based on the 2026–2027 semi-monthly payroll schedule.</p>
+        </div>
+      </div>
+      <div class="grid form-grid school-form">
+        <label>Work date
+          <input id="schoolWorkDate" type="date" />
+        </label>
+        <label>Hours worked
+          <input id="schoolHours" type="number" step="0.01" placeholder="0.00" />
+        </label>
+        <label>Hourly rate
+          <input id="schoolRate" type="number" step="0.01" value="20.81" />
+        </label>
+        <label>Estimated net %
+          <input id="schoolNetPercent" type="number" step="0.01" value="83.05" />
+        </label>
+      </div>
+      <div id="schoolEstimate" class="school-estimate">
+        <div><span>Pay period</span><strong>—</strong></div>
+        <div><span>Expected payday</span><strong>—</strong></div>
+        <div><span>Gross estimate</span><strong>$0</strong></div>
+        <div><span>Net estimate</span><strong>$0</strong></div>
+      </div>
+      <button id="addSchoolPay" class="primary full">Add estimated school paycheck</button>
+      <p class="backup-note">Default net % is based on your example paystub: $570.32 net from $686.73 gross. You can change it anytime.</p>
+    </section>
+
     <section class="summary-card app-screen" data-screen="dashboard">
       <h2>Total Cash In by source</h2>
       <div id="sourceSummary" class="source-list"></div>
+    </section>
+
+
+    <section class="school-card app-screen" data-screen="add">
+      <div class="section-head">
+        <div>
+          <h2>School Paycheck Calculator</h2>
+          <p>Enter hours worked. The app estimates gross pay, net pay after deductions, and the payday based on the 2026–2027 semi-monthly payroll schedule.</p>
+        </div>
+      </div>
+      <div class="grid form-grid school-form">
+        <label>Work date
+          <input id="schoolWorkDate" type="date" />
+        </label>
+        <label>Hours worked
+          <input id="schoolHours" type="number" step="0.01" placeholder="0.00" />
+        </label>
+        <label>Hourly rate
+          <input id="schoolRate" type="number" step="0.01" value="20.81" />
+        </label>
+        <label>Estimated net %
+          <input id="schoolNetPercent" type="number" step="0.01" value="83.05" />
+        </label>
+      </div>
+      <div id="schoolEstimate" class="school-estimate">
+        <div><span>Pay period</span><strong>—</strong></div>
+        <div><span>Expected payday</span><strong>—</strong></div>
+        <div><span>Gross estimate</span><strong>$0</strong></div>
+        <div><span>Net estimate</span><strong>$0</strong></div>
+      </div>
+      <button id="addSchoolPay" class="primary full">Add estimated school paycheck</button>
+      <p class="backup-note">Default net % is based on your example paystub: $570.32 net from $686.73 gross. You can change it anytime.</p>
     </section>
 
     <section class="summary-card app-screen" data-screen="dashboard">

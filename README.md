@@ -305,3 +305,14 @@ Remaining Debt = Starting Debt - Starting Cash - Total Cash In + Total Expenses 
 - Firebase config is safe to include in frontend code, but Firestore rules must be private.
 - If Google Sign-In fails, check Authorized Domains.
 - If sync fails, check Firestore rules and the browser console.
+
+## School Paycheck Calculator
+
+The Add screen includes a School Paycheck Calculator. Enter the work date and hours worked. The app will:
+
+- calculate gross pay using the hourly rate,
+- estimate net pay using the net percentage,
+- find the matching 2026–2027 semi-monthly payroll period,
+- save the estimated income on the expected payday.
+
+Default values are based on the sample paystub: $20.81/hour and about 83.05% net pay ($570.32 net from $686.73 gross). This is only an estimate; actual taxes/deductions can change by paycheck.

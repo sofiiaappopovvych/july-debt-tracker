@@ -127,6 +127,62 @@ function populateCategoryAndSource(selectedCategory, selectedSource) {
   $('txSource').value = source;
 }
 
+
+const schoolPayrollSchedule = [
+  { start: '2026-07-01', end: '2026-07-15', due: '2026-07-15', pay: '2026-07-24' },
+  { start: '2026-07-16', end: '2026-07-31', due: '2026-07-31', pay: '2026-08-07' },
+  { start: '2026-08-01', end: '2026-08-15', due: '2026-08-14', pay: '2026-08-25' },
+  { start: '2026-08-16', end: '2026-08-31', due: '2026-08-31', pay: '2026-09-09' },
+  { start: '2026-09-01', end: '2026-09-15', due: '2026-09-15', pay: '2026-09-25' },
+  { start: '2026-09-16', end: '2026-09-30', due: '2026-09-30', pay: '2026-10-09' },
+  { start: '2026-10-01', end: '2026-10-15', due: '2026-10-15', pay: '2026-10-23' },
+  { start: '2026-10-16', end: '2026-10-31', due: '2026-10-30', pay: '2026-11-09' },
+  { start: '2026-11-01', end: '2026-11-15', due: '2026-11-13', pay: '2026-11-25' },
+  { start: '2026-11-16', end: '2026-11-30', due: '2026-11-30', pay: '2026-12-09' },
+  { start: '2026-12-01', end: '2026-12-13', due: '2026-12-11', pay: '2026-12-23' },
+  { start: '2026-12-14', end: '2026-12-31', due: '2026-12-31', pay: '2027-01-08' },
+  { start: '2027-01-01', end: '2027-01-15', due: '2027-01-15', pay: '2027-01-25' },
+  { start: '2027-01-16', end: '2027-01-31', due: '2027-01-29', pay: '2027-02-09' },
+  { start: '2027-02-01', end: '2027-02-15', due: '2027-02-15', pay: '2027-02-25' },
+  { start: '2027-02-16', end: '2027-02-28', due: '2027-02-26', pay: '2027-03-09' },
+  { start: '2027-03-01', end: '2027-03-15', due: '2027-03-15', pay: '2027-03-25' },
+  { start: '2027-03-16', end: '2027-03-31', due: '2027-03-31', pay: '2027-04-09' },
+  { start: '2027-04-01', end: '2027-04-15', due: '2027-04-15', pay: '2027-04-23' },
+  { start: '2027-04-16', end: '2027-04-30', due: '2027-04-30', pay: '2027-05-07' },
+  { start: '2027-05-01', end: '2027-05-15', due: '2027-05-14', pay: '2027-05-25' },
+  { start: '2027-05-16', end: '2027-05-31', due: '2027-05-31', pay: '2027-06-09' },
+  { start: '2027-06-01', end: '2027-06-15', due: '2027-06-15', pay: '2027-06-25' },
+  { start: '2027-06-16', end: '2027-06-30', due: '2027-06-30', pay: '2027-07-09' }
+];
+
+function schoolPayrollForDate(date) {
+  return schoolPayrollSchedule.find(p => date >= p.start && date <= p.end) || null;
+}
+
+function schoolEstimate() {
+  const date = $('schoolWorkDate')?.value || todayISO();
+  const hours = Number($('schoolHours')?.value || 0);
+  const rate = Number($('schoolRate')?.value || 20.81);
+  const netPercent = Number($('schoolNetPercent')?.value || 83.05);
+  const gross = Math.max(0, hours * rate);
+  const net = Math.max(0, gross * (netPercent / 100));
+  const period = schoolPayrollForDate(date);
+  return { date, hours, rate, netPercent, gross, net, period };
+}
+
+function renderSchoolEstimate() {
+  if (!$('schoolEstimate')) return;
+  const estimate = schoolEstimate();
+  const periodText = estimate.period ? `${estimate.period.start} – ${estimate.period.end}` : 'Not in schedule';
+  const payText = estimate.period ? estimate.period.pay : 'Check schedule';
+  $('schoolEstimate').innerHTML = `
+    <div><span>Pay period</span><strong>${periodText}</strong></div>
+    <div><span>Expected payday</span><strong>${payText}</strong></div>
+    <div><span>Gross estimate</span><strong>${money(estimate.gross)}</strong></div>
+    <div><span>Net estimate</span><strong>${money(estimate.net)}</strong></div>
+  `;
+}
+
 function calc() {
   // Remaining Debt = Starting Debt - Starting Cash - Total Cash In + Total Expenses + Target Cushion
   // Total Cash In includes earned income, refunds, sold items, gifts, and other incoming cash.
@@ -324,6 +380,7 @@ function render() {
     .join('') || '<tr><td colspan="4">No daily activity yet.</td></tr>';
 
   renderCalendar(c);
+  renderSchoolEstimate();
 
   $('txTable').innerHTML = state.transactions.slice()
     .filter(transactionMatchesHistorySearch)
@@ -561,6 +618,31 @@ async function importJsonBackup(file) {
     if ($('importJson')) $('importJson').value = '';
   }
 }
+
+
+if ($('schoolWorkDate')) $('schoolWorkDate').value ||= todayISO();
+['schoolWorkDate', 'schoolHours', 'schoolRate', 'schoolNetPercent'].forEach(id => {
+  if ($(id)) $(id).oninput = renderSchoolEstimate;
+});
+if ($('addSchoolPay')) $('addSchoolPay').onclick = async () => {
+  const estimate = schoolEstimate();
+  if (!estimate.hours) return alert('Enter school hours worked.');
+  if (!estimate.period) return alert('This date is outside the saved 2026–2027 payroll schedule.');
+  state.transactions.push({
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    date: estimate.period.pay,
+    type: 'income',
+    group: 'Earned Income',
+    category: 'School',
+    source: 'School',
+    amount: Number(estimate.net.toFixed(2)),
+    note: `School estimate: ${estimate.hours} hrs on ${estimate.date}; gross ${money(estimate.gross)}; net ${estimate.netPercent}%; pay period ${estimate.period.start}–${estimate.period.end}; timecard due ${estimate.period.due}`
+  });
+  $('schoolHours').value = '';
+  await saveCloud();
+  render();
+};
 
 $('txType').onchange = () => populateCategoryAndSource();
 $('txCategory').onchange = () => populateCategoryAndSource($('txCategory').value);

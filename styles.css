@@ -12,3 +12,43 @@
 @media(min-width:901px){.bottom-nav{position:sticky;top:0;bottom:auto;margin:0 auto 16px;border:1px solid #eadbd0;border-radius:24px;box-shadow:var(--shadow);padding:8px;background:var(--card)}.nav-btn{flex-direction:row;min-height:46px}.nav-btn b{font-size:13px}.app{padding-bottom:18px}.app-screen.screen-hidden{display:none!important}}
 @media(max-width:900px){body{padding-bottom:env(safe-area-inset-bottom);-webkit-tap-highlight-color:transparent}.app{padding:12px 12px calc(92px + env(safe-area-inset-bottom));max-width:100%;overflow-x:hidden}.hero{border-radius:24px;padding:20px}.hero h1{font-size:30px}.hero .subtitle{font-size:14px}.pill{align-self:flex-start}.dashboard{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.stat{padding:14px;border-radius:18px}.stat.big{grid-column:span 2}.stat strong{font-size:22px}.stat.big strong{font-size:30px}.form-grid,.quick-form,.calendar-filters{grid-template-columns:1fr!important}input,select,button{font-size:16px;min-height:48px}.primary,.secondary,.danger,.import-label{border-radius:16px;padding:14px 16px}.quick-buttons{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.quick-btn{border-radius:16px;min-height:48px}.source-list{grid-template-columns:1fr}.calendar-grid{grid-template-columns:1fr}.calendar-day{min-height:auto}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}table{min-width:760px}section{border-radius:22px;margin:12px 0}.auth-card,.table-head,.section-head{display:block}.auth-actions,.backup-actions{display:grid;grid-template-columns:1fr;margin-top:10px}.history-search-label{max-width:none}.bottom-nav{border-radius:24px 24px 0 0}.nav-btn{min-width:0}.nav-btn b{font-size:10px}.nav-btn span{font-size:19px}}
 @media(max-width:390px){.dashboard{grid-template-columns:1fr}.stat.big{grid-column:span 1}.nav-btn b{font-size:9px}.nav-btn span{font-size:18px}.bottom-nav{gap:2px;padding-left:6px;padding-right:6px}.hero h1{font-size:26px}}
+
+.school-card {
+  background: #fffaf5;
+  border: 1px solid rgba(155, 92, 59, 0.18);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 12px 30px rgba(68, 42, 25, 0.08);
+}
+
+.school-estimate {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.school-estimate div {
+  background: #ffffff;
+  border: 1px solid rgba(155, 92, 59, 0.16);
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.school-estimate span {
+  display: block;
+  font-size: 0.78rem;
+  color: #7a6658;
+  margin-bottom: 4px;
+}
+
+.school-estimate strong {
+  font-size: 1rem;
+  color: #3c2a20;
+}
+
+@media (max-width: 760px) {
+  .school-estimate {
+    grid-template-columns: 1fr 1fr;
+  }
+}
