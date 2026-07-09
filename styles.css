@@ -220,3 +220,144 @@ body {
     transform: none;
   }
 }
+
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app,
+.auth-shell,
+.main,
+.page,
+.section,
+.container,
+.card,
+.form-card,
+.admin-card,
+.kpi-card,
+.crm-card {
+  max-width: 100%;
+  min-width: 0;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100%;
+  min-width: 0;
+  font-size: 16px;
+}
+
+.form-grid,
+.grid,
+.stats-grid,
+.kpi-grid,
+.admin-grid,
+.owner-grid,
+.report-grid {
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .app-header {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px 16px;
+  }
+
+  .app-header h1 {
+    font-size: 32px;
+    line-height: 1.1;
+    word-break: break-word;
+  }
+
+  .header-row,
+  .topbar,
+  .app-shell {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .nav,
+  .tabs,
+  .desktop-nav {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav button,
+  .tabs button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .mobile-menu,
+  .menu-panel {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .content,
+  main {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    overflow-x: hidden;
+  }
+
+  .form-card,
+  .card {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .form-grid,
+  .stats-grid,
+  .kpi-grid,
+  .admin-grid,
+  .owner-grid,
+  .report-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  label,
+  .field,
+  .form-field {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+  }
+
+  select[multiple] {
+    min-height: 140px;
+  }
+}
